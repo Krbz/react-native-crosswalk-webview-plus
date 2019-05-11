@@ -1,7 +1,9 @@
 # react-native-crosswalk-webview-plus
-Crosswalk's WebView for React Native on Android. 
+Crosswalk's WebView for React Native on Android.
 
 #### thanks [jordansexton](https://github.com/jordansexton),He developed the original project,but  He hasn't been updated for two years so far (2018.9),and there are some bugs...,so I fix them and I add some new features
+#### thanks [fantasy525](https://github.com/fantasy525),He fixed some bugs and I added some new features.
+No ARM&x86 Support so I forked it and add support. Also fixed no supported UIManager Accessing
 
 [![npm licence](http://img.shields.io/npm/l/react-native-webview-crosswalk.svg?style=flat-square)](https://npmjs.org/package/react-native-webview-crosswalk "View this project on npm")
 
@@ -17,10 +19,10 @@ Crosswalk's WebView for React Native on Android.
 npm install react-native-crosswalk-webview-plus --save or
 yarn add react-native-crosswalk-webview-plus
 ```
-* copy 
+* copy
 
-```node_modules/react-native-webview-crosswalk/libs/xwalk_core_library-23.53.589.4-arm.aar ``` to your 
-```android/app/libs``` 
+```node_modules/react-native-webview-crosswalk/libs/xwalk_core_library-23.53.589.4-arm.aar ``` to your
+```android/app/libs```
 
 
 ### 2.Include module in your Android project
@@ -94,11 +96,11 @@ public class MainApplication extends Application implements ReactApplication {
   }
 ```
 
-Because  when you open the WebView page input box to enter text, app will crash,may be activity change ApplicationContext when activity onResume,so we need init XWalkView on Create,some 
+Because  when you open the WebView page input box to enter text, app will crash,may be activity change ApplicationContext when activity onResume,so we need init XWalkView on Create,some
 variables may be static ,so it get value onCreate,and It's exactly what XWalkView runtime need. and I hope react-native can fix this for later version,and it happend in development mode,release mode is OK,so you can delete  in release mode
 
 * The crosswalk.arr file I use only supports armeabi-v7a or armeabi  32 bit CPU,
-If you got this error 
+If you got this error
 ```java
 Java. Lang. RuntimeException: both Please have your activity extend XWalkActivity for Shared mode
 ```
