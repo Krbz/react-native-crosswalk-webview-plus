@@ -1,6 +1,6 @@
 {
 	"name": "react-native-crosswalk-webview-plus",
-	"version": "1.3.0",
+	"version": "1.3.1",
 	"description": "Crosswalk's WebView for React Native on Android",
 	"main": "index.js",
 	"scripts": {
@@ -20,16 +20,12 @@
 		"xwalk",
 		"android"
 	],
-	"author": "Jordan Sexton <jordan@jordansexton.com>,ZuoXiaoFei <1056726491@qq.com>",
+	"author": "Krystian Blaszczyk <dev@blaszczyk.tk>",
 	"license": "MIT",
 	"contributors": [
 		{
-			"name": "Jordan Sexton",
-			"email": "jordan@jordansexton.com"
-		},
-		{
-			"name": "ZuoXiaoFei",
-			"email": "1056726491@qq.com"
+			"name": "Krystian Blaszczyk",
+			"email": "dev@blaszczyk.tk"
 		}
 	],
 	"peerDependencies": {

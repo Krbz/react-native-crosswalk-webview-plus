@@ -30,7 +30,7 @@ function handleDownloaded (error, data) {
 }
 
 function downloadLibrary () {
-    var url = 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2/org/xwalk/xwalk_core_library' + beta + '/' + version + '/xwalk_core_library' + beta + '-' + version +'-arm'+ '.aar';
+    var url = 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2/org/xwalk/xwalk_core_library' + beta + '/' + version + '/xwalk_core_library' + beta + '-' + version + '.aar';
     console.log('Downloading file...from'+url);
     wget(url, handleDownloaded);
 }
