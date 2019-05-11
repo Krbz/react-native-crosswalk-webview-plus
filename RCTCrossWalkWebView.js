@@ -82,35 +82,35 @@ class RCTCrossWalkWebView extends Component{
   goBack () {
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
-      UIManager.CrosswalkWebView.Commands.goBack,
+      UIManager.getViewManagerConfig('CrosswalkWebView').Commands.goBack,
       null
     );
   }
   goForward () {
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
-      UIManager.CrosswalkWebView.Commands.goForward,
+      UIManager.getViewManagerConfig('CrosswalkWebView').Commands.goForward,
       null
     );
   }
   reload () {
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
-      UIManager.CrosswalkWebView.Commands.reload,
+      UIManager.getViewManagerConfig('CrosswalkWebView').Commands.reload,
       null
     );
   }
   load (url) {//just a string url,eg:"http://www.baidu.com";
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
-      UIManager.CrosswalkWebView.Commands.load,
+      UIManager.getViewManagerConfig('CrosswalkWebView').Commands.load,
       [String(url)]
     );
   }
   postMessage (data) {
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
-      UIManager.CrosswalkWebView.Commands.postMessage,
+      UIManager.getViewManagerConfig('CrosswalkWebView').Commands.postMessage,
       [String(data)]
     );
   }
