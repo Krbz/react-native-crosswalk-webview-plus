@@ -3,10 +3,12 @@ package com.jordansexton.react.crosswalk.webview;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.ValueCallback;
 
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -15,7 +17,9 @@ import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.facebook.react.views.webview.events.TopMessageEvent;
 
+import org.chromium.base.ThreadUtils;
 import org.xwalk.core.JavascriptInterface;
+import org.xwalk.core.XWalkGetBitmapCallback;
 import org.xwalk.core.XWalkNavigationHistory;
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkUIClient;
@@ -24,7 +28,10 @@ import org.xwalk.core.XWalkView;
 import javax.annotation.Nullable;
 
 class CrosswalkWebView extends XWalkView implements LifecycleEventListener {
-
+    private static CrosswalkWebView mInstanceActivity;
+    public static CrosswalkWebView getmInstanceActivity() {
+        return mInstanceActivity;
+    }
 
     private EventDispatcher eventDispatcher;
 
@@ -69,8 +76,37 @@ class CrosswalkWebView extends XWalkView implements LifecycleEventListener {
         resourceClient = new ResourceClient(this);
         uiClient = new UIClient(this);
 
+        mInstanceActivity = this;
+
         this.setResourceClient(resourceClient);
         this.setUIClient(uiClient);
+    }
+
+    public interface onPrintScreenLoadedCallback {
+            void onSuccess(Bitmap surfaceBitmap);
+            void onError();
+    }
+
+    public void captureXWalkBitmap(final onPrintScreenLoadedCallback callback) {
+        ThreadUtils.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mInstanceActivity.captureBitmapAsync(new XWalkGetBitmapCallback() {
+                    //Note: onFinishGetBitmap happens at the same thread as captureBitmapAsync, usually the UI thread.
+                    @Override
+                    public void onFinishGetBitmap(Bitmap bitmap, int response) {
+                        Log.d("captureXWalkBitmap", "onFinishGetBitmap");
+
+                        if (response == 0) {
+                            callback.onSuccess(bitmap);
+
+                        } else {
+                            callback.onError();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     ReactContext reactContext;
