@@ -27,7 +27,7 @@ import org.xwalk.core.XWalkView;
 
 import javax.annotation.Nullable;
 
-class CrosswalkWebView extends XWalkView implements LifecycleEventListener {
+public class CrosswalkWebView extends XWalkView implements LifecycleEventListener {
     private static CrosswalkWebView mInstanceActivity;
     public static CrosswalkWebView getmInstanceActivity() {
         return mInstanceActivity;
