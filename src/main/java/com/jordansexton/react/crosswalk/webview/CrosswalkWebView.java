@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -68,6 +69,8 @@ public class CrosswalkWebView extends XWalkView implements LifecycleEventListene
 
         this.setResourceClient(resourceClient);
         this.setUIClient(uiClient);
+
+        mInstanceActivity = this;
     }
 
     public CrosswalkWebView (Context context, AttributeSet attributes) {
@@ -76,21 +79,22 @@ public class CrosswalkWebView extends XWalkView implements LifecycleEventListene
         resourceClient = new ResourceClient(this);
         uiClient = new UIClient(this);
 
-        mInstanceActivity = this;
-
         this.setResourceClient(resourceClient);
         this.setUIClient(uiClient);
+
+        mInstanceActivity = this;
     }
 
     public interface onPrintScreenLoadedCallback {
-            void onSuccess(Bitmap surfaceBitmap);
-            void onError();
+        void onSuccess(Bitmap surfaceBitmap);
+        void onError();
     }
 
     public void captureXWalkBitmap(final onPrintScreenLoadedCallback callback) {
         ThreadUtils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mInstanceActivity.setDrawingCacheEnabled(true);
                 mInstanceActivity.captureBitmapAsync(new XWalkGetBitmapCallback() {
                     //Note: onFinishGetBitmap happens at the same thread as captureBitmapAsync, usually the UI thread.
                     @Override
@@ -100,8 +104,11 @@ public class CrosswalkWebView extends XWalkView implements LifecycleEventListene
                         if (response == 0) {
                             callback.onSuccess(bitmap);
 
+                            mInstanceActivity.setDrawingCacheEnabled(false);
                         } else {
                             callback.onError();
+
+                            mInstanceActivity.setDrawingCacheEnabled(false);
                         }
                     }
                 });
@@ -340,5 +347,10 @@ public class CrosswalkWebView extends XWalkView implements LifecycleEventListene
             isChoosingFile = true;
             super.openFileChooser(view, uploadFile, acceptType, capture);
         }
+    }
+
+    @Override
+    public void setBackgroundColor(int color) {
+        super.setBackgroundColor(Color.parseColor("#3e4b69"));
     }
 }

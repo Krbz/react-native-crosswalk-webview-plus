@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -57,6 +59,14 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
         return REACT_CLASS;
     }
 
+    private static int getActivityHeight(Activity activity) {
+        return activity.findViewById(android.R.id.content).getHeight();
+    }
+
+    private static int getActivityWidth(Activity activity) {
+        return activity.findViewById(android.R.id.content).getWidth();
+    }
+
     @Override
     public CrosswalkWebView createViewInstance (ThemedReactContext context) {
 
@@ -76,10 +86,20 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
             settings.setAllowFileAccessFromFileURLs(false);
             setAllowUniversalAccessFromFileURLs(crosswalkWebView, false);
         }
-        // Fixes broken full-screen modals/galleries due to body height being 0.
-        crosswalkWebView.setLayoutParams(
-            new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+
+        if (_activity != null) {
+            crosswalkWebView.setLayoutParams(
+                    new ViewGroup.LayoutParams(getActivityWidth(_activity),
+                            getActivityHeight(_activity) - 1)
+            );
+            crosswalkWebView.setPadding(0, 1, 0, 0);
+        } else {
+            crosswalkWebView.setLayoutParams(
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT)
+            );
+        }
+
         // open cookies
         XWalkCookieManager mCookieManager = new XWalkCookieManager();
         mCookieManager.setAcceptCookie(true);
