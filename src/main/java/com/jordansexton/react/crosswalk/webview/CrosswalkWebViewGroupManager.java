@@ -1,10 +1,13 @@
 package com.jordansexton.react.crosswalk.webview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -32,6 +35,13 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebView> {
+    private static CrosswalkWebViewGroupManager mInstanceActivity;
+    public static CrosswalkWebViewGroupManager getmInstanceActivity() {
+        return mInstanceActivity;
+    }
+
+    private Activity _activity;
+    private CrosswalkWebView crosswalkWebView;
 
     public static final int GO_BACK = 1;
 
@@ -88,6 +98,8 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
         }
 
         if (_activity != null) {
+            Log.d("handleScreenResize Init", "height " + getActivityHeight(_activity) + ", width " + getActivityWidth(_activity));
+
             crosswalkWebView.setLayoutParams(
                     new ViewGroup.LayoutParams(getActivityWidth(_activity),
                             getActivityHeight(_activity) - 1)
@@ -107,7 +119,54 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
 
         context.addLifecycleEventListener(crosswalkWebView);
         reactContext.addActivityEventListener(new XWalkActivityEventListener(crosswalkWebView));
+
+        mInstanceActivity = this;
+        this.crosswalkWebView = crosswalkWebView;
+        this._activity = _activity;
+
         return crosswalkWebView;
+    }
+
+    public static int getStatusBarHeight(final Context context) {
+        final Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            return resources.getDimensionPixelSize(resourceId);
+        else
+            return (int) Math.ceil((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 24 : 25) * resources.getDisplayMetrics().density);
+    }
+
+    public void handleScreenResize(Boolean isLandscape) {
+        Log.d("handleScreenResize", "x");
+        if (_activity != null) {
+            Log.d("handleScreenResize", "height " + getActivityHeight(_activity) + ", width " + getActivityWidth(_activity));
+
+            ViewGroup.LayoutParams params = crosswalkWebView.getLayoutParams();
+
+            if (isLandscape) {
+                params.width = getActivityHeight(_activity) + getStatusBarHeight(_activity);
+                params.height = getActivityWidth(_activity) - getStatusBarHeight(_activity) - 1;
+
+                crosswalkWebView.setLayoutParams(params);
+                crosswalkWebView.setPadding(0, 1, 0, 0);
+                crosswalkWebView.forceLayout();
+
+            } else {
+                params.width = getActivityHeight(_activity) + getStatusBarHeight(_activity);
+                params.height = getActivityWidth(_activity) - getStatusBarHeight(_activity) - 1;
+
+                crosswalkWebView.setLayoutParams(params);
+                crosswalkWebView.setPadding(0, 1, 0, 0);
+                crosswalkWebView.forceLayout();
+            }
+        } else {
+            Log.d("handleScreenResize", "else");
+            ViewGroup.LayoutParams params = crosswalkWebView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            crosswalkWebView.setLayoutParams(params);
+            crosswalkWebView.forceLayout();
+        }
     }
 
     @Override
