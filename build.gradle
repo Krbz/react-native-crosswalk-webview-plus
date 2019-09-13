@@ -21,10 +21,19 @@ repositories {
     }
 }
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 dependencies {
     implementation "com.facebook.react:react-native:+"
-    // v7a
-    implementation (name: "xwalk_core_library-23.53.589.4", ext: "aar")
-    // v8a
-//     implementation (name: "xwalk_core_library-23.53.589.4-64bit", ext: "aar")
+    if (safeExtGet('enable64Arch', true)) {
+      // v8a
+      logger.warn('xWalk arch v8a')
+      implementation (name: "xwalk_core_library-23.53.589.4-64bit", ext: "aar")
+    } else {
+      // v7a
+      logger.warn('xWalk arch v7a')
+      implementation (name: "xwalk_core_library-23.53.589.4", ext: "aar")
+    }
 }
