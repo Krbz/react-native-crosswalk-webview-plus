@@ -97,20 +97,10 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
             setAllowUniversalAccessFromFileURLs(crosswalkWebView, false);
         }
 
-        if (_activity != null) {
-            Log.d("handleScreenResize Init", "height " + getActivityHeight(_activity) + ", width " + getActivityWidth(_activity));
-
-            crosswalkWebView.setLayoutParams(
-                    new ViewGroup.LayoutParams(getActivityWidth(_activity),
-                            getActivityHeight(_activity) - 1)
-            );
-            crosswalkWebView.setPadding(0, 1, 0, 0);
-        } else {
-            crosswalkWebView.setLayoutParams(
-                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT)
-            );
-        }
+        crosswalkWebView.setLayoutParams(
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT)
+        );
 
         // open cookies
         XWalkCookieManager mCookieManager = new XWalkCookieManager();
@@ -138,35 +128,11 @@ public class CrosswalkWebViewGroupManager extends ViewGroupManager<CrosswalkWebV
 
     public void handleScreenResize(Boolean isLandscape) {
         Log.d("handleScreenResize", "x");
-        if (_activity != null) {
-            Log.d("handleScreenResize", "height " + getActivityHeight(_activity) + ", width " + getActivityWidth(_activity));
-
-            ViewGroup.LayoutParams params = crosswalkWebView.getLayoutParams();
-
-            if (isLandscape) {
-                params.width = getActivityHeight(_activity) + getStatusBarHeight(_activity);
-                params.height = getActivityWidth(_activity) - getStatusBarHeight(_activity) - 1;
-
-                crosswalkWebView.setLayoutParams(params);
-                crosswalkWebView.setPadding(0, 1, 0, 0);
-                crosswalkWebView.forceLayout();
-
-            } else {
-                params.width = getActivityHeight(_activity) + getStatusBarHeight(_activity);
-                params.height = getActivityWidth(_activity) - getStatusBarHeight(_activity) - 1;
-
-                crosswalkWebView.setLayoutParams(params);
-                crosswalkWebView.setPadding(0, 1, 0, 0);
-                crosswalkWebView.forceLayout();
-            }
-        } else {
-            Log.d("handleScreenResize", "else");
-            ViewGroup.LayoutParams params = crosswalkWebView.getLayoutParams();
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            crosswalkWebView.setLayoutParams(params);
-            crosswalkWebView.forceLayout();
-        }
+        ViewGroup.LayoutParams params = crosswalkWebView.getLayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        crosswalkWebView.setLayoutParams(params);
+        crosswalkWebView.forceLayout();
     }
 
     @Override
